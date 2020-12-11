@@ -1,6 +1,7 @@
 from tetris import *
 from random import *
 import threading
+import time
 
 def LED_init():
     thread=threading.Thread(target=LMD.main, args=())
@@ -76,12 +77,16 @@ if __name__ == "__main__":
     key = '0' + str(idxBlockType)
     top = 0
     left = board.iScreenDw + board.iScreenDx//2 - 2
-    print(left)
     board.accept(key, top, left)
     board.printScreen()
+    toBottom = False
       
     while (1):
-        key_input = input('Enter a key from [ q (quit), a (left), d (right), s (down), w (rotate), \' \' (drop) ] : ')
+        if not toBottom:
+            key_input = input('Enter a key from [ q (quit), a (left), d (right), s (down), w (rotate), \' \' (drop) ] : ')
+        else:
+            top += 1
+
         if key_input != 'q':
           if key_input == 'a': # move left
               left -= 1
@@ -89,19 +94,48 @@ if __name__ == "__main__":
               left += 1
           elif key_input == 's': # move down
               top += 1
-            
+          elif key_input == 'w': # rotate the block clockwise
+              int_key = int(key[0]) + 1
+              if int_key > 3:
+                  int_key = 0
+              key = str(int_key) + key[1]
+          elif key_input == ' ':
+              toBottom = True
+
           state = board.accept(key, top, left)
+    
+          if(state == TetrisState.Hitwall):
+            if key_input == 'a': # undo: move right
+                left += 1
+            elif key_input == 'd': # undo: move left
+                left -= 1
+            elif key_input == 's': # undo: move up
+                top -= 1
+            elif key_input == 'w': # undo: rotate the block counter-clockwise
+                int_key = int(key[0]) - 1
+                if int_key < 0:
+                    int_key = 3
+                key = str(int_key) + key[1]
+            elif key_input == ' ':
+                top += 1
+                toBottom = False
+                state = TetrisState.NewBlock 
+
           board.printScreen()
 
           if(state == TetrisState.NewBlock):
+              board.iScreen = Matrix(board.oScreen)
               idxBlockType = randint(0, 6)
               key = '0' + str(idxBlockType)
-              state = board.accept(key)
+              top = 0
+              left = board.iScreenDw + board.iScreenDx//2 - 2
+              state = board.accept(key, top, left)
               if(state == TetrisState.Finished):
                   board.printScreen()
                   print('Game Over!!!')
                   break
               board.printScreen()
+
         else:
           print('Game aborted...')
           break

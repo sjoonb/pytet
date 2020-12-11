@@ -7,6 +7,7 @@ class TetrisState(Enum):
     Running = 0
     NewBlock = 1
     Finished = 2
+    Hitwall = 3
 ### end of class TetrisState():
 
 class Tetris():
@@ -83,12 +84,17 @@ class Tetris():
     def accept(self, key, top, left):
         self.state = TetrisState.Running
 
-        currBlk = Matrix(Tetris.setOfBlockObjects[int(key[1])][int(key[0])])
-        tempBlk = self.iScreen.clip(top, left, top + currBlk.get_dy(), left + currBlk.get_dx())
-        tempBlk = tempBlk + currBlk
+        self.currBlk = Matrix(Tetris.setOfBlockObjects[int(key[1])][int(key[0])])
+        self.tempBlk = self.iScreen.clip(top, left, top + self.currBlk.get_dy(), left + self.currBlk.get_dx())
+        self.tempBlk = self.tempBlk + self.currBlk
+
+        if self.tempBlk.anyGreaterThan(1):
+            self.state = TetrisState.Hitwall
+            return self.state
+
 
         self.oScreen = Matrix(self.iScreen)
-        self.oScreen.paste(tempBlk, top, left)
+        self.oScreen.paste(self.tempBlk, top, left)
 
         return self.state
 
