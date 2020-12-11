@@ -81,12 +81,18 @@ if __name__ == "__main__":
     board.printScreen()
       
     while (1):
-        key = input('Enter a key from [ q (quit), a (left), d (right), s (down), w (rotate), \' \' (drop) ] : ')
-        
-        if key != 'q':
-          state = board.accept(key)
+        key_input = input('Enter a key from [ q (quit), a (left), d (right), s (down), w (rotate), \' \' (drop) ] : ')
+        if key_input != 'q':
+          if key_input == 'a': # move left
+              left -= 1
+          elif key_input == 'd': # move right
+              left += 1
+          elif key_input == 's': # move down
+              top += 1
+            
+          state = board.accept(key, top, left)
           board.printScreen()
-          
+
           if(state == TetrisState.NewBlock):
               idxBlockType = randint(0, 6)
               key = '0' + str(idxBlockType)

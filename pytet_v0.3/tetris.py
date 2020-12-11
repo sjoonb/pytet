@@ -82,13 +82,12 @@ class Tetris():
 
     def accept(self, key, top, left):
         self.state = TetrisState.Running
-        print(key)
-        print(top, left)
+
         currBlk = Matrix(Tetris.setOfBlockObjects[int(key[1])][int(key[0])])
         tempBlk = self.iScreen.clip(top, left, top + currBlk.get_dy(), left + currBlk.get_dx())
-        print(currBlk.get_dx())
         tempBlk = tempBlk + currBlk
 
+        self.oScreen = Matrix(self.iScreen)
         self.oScreen.paste(tempBlk, top, left)
 
         return self.state
