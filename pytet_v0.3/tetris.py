@@ -78,19 +78,48 @@ class Tetris():
             print()
         print()
 
-    def deleteFullLines(self): # To be implemented!!
+    def deleteFullLines(self, top): # To be implemented!!
+        deleted = 0
+        blkY = self.currBlk.get_dy() # 블럭 크기
+ 
+        for y in range(blkY-1,-1,-1):
+            currY = top + y + deleted
+            line = self.oScreen.clip(currY, 0, currY + 1, self.oScreen.get_dx())
+
+            if (currY < self.iScreenDy and line.sum() == self.oScreen.get_dx()):
+                temp = self.oScreen.clip(0, 0, currY, self.oScreen.get_dx())
+                lineArr = [[0 for i in range(self.iScreenDx)]]
+                newLine = Matrix(lineArr)
+
+                self.oScreen.paste(temp, 1, 0) 
+                self.oScreen.paste(newLine, 0, self.iScreenDw)
+                deleted += 1
+                
+
+
+        print("line.sum() = {}\noScreen.dx = {}".format(line.sum(), self.oScreen.get_dx())) 
+        print("dw = {}".format(self.iScreenDw))
+
+        if line.sum() == self.oScreen.get_dx():
+            print("full!")
+
+        #self.oScreen.paste(line, 0, 0)
+        
+
         return
 
     def accept(self, key, top, left):
-        self.state = TetrisState.Running
 
         self.currBlk = Matrix(Tetris.setOfBlockObjects[int(key[1])][int(key[0])])
         self.tempBlk = self.iScreen.clip(top, left, top + self.currBlk.get_dy(), left + self.currBlk.get_dx())
         self.tempBlk = self.tempBlk + self.currBlk
 
         if self.tempBlk.anyGreaterThan(1):
+            self.deleteFullLines(top) 
             self.state = TetrisState.Hitwall
             return self.state
+        else:
+            self.state = TetrisState.Running
 
 
         self.oScreen = Matrix(self.iScreen)

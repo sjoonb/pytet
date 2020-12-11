@@ -103,7 +103,6 @@ if __name__ == "__main__":
               toBottom = True
 
           state = board.accept(key, top, left)
-    
           if(state == TetrisState.Hitwall):
             if key_input == 'a': # undo: move right
                 left += 1

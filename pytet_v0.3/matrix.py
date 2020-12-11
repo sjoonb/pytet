@@ -56,6 +56,8 @@ class Matrix:
             return
 
     def __str__(self):
+        for i in self._array:
+            print(i)
         return 'Matrix(%d, %d)' % (self._dy, self._dx)
 
 
