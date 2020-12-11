@@ -29,6 +29,7 @@ class Tetris():
         for i in range(Tetris.nBlockTypes):
             for j in range(Tetris.nBlockDegrees):
                 Tetris.setOfBlockObjects[i][j] = Matrix(setOfBlockArrays[i][j])
+
         return
 		
     def createArrayScreen(self):
@@ -74,12 +75,22 @@ class Tetris():
                     print("XX", end='')
                     #continue
             print()
+        print('hi')
 
     def deleteFullLines(self): # To be implemented!!
         return
 
-    def accept(self, key): # To be implemented!!
+    def accept(self, key, top, left):
         self.state = TetrisState.Running
+        print(key)
+        print(top, left)
+        currBlk = Matrix(Tetris.setOfBlockObjects[int(key[1])][int(key[0])])
+        tempBlk = self.iScreen.clip(top, left, top + currBlk.get_dy(), left + currBlk.get_dx())
+        print(currBlk.get_dx())
+        tempBlk = tempBlk + currBlk
+
+        self.oScreen.paste(tempBlk, top, left)
+
         return self.state
 
 ### end of class Tetris():

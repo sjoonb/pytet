@@ -74,8 +74,10 @@ if __name__ == "__main__":
 
     idxBlockType = randint(0, 6)
     key = '0' + str(idxBlockType)
-    print(key)
-    board.accept(key)
+    top = 0
+    left = board.iScreenDw + board.iScreenDx//2 - 2
+    print(left)
+    board.accept(key, top, left)
     board.printScreen()
       
     while (1):
