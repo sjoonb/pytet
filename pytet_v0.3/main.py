@@ -111,13 +111,14 @@ if __name__ == "__main__":
                 left -= 1
             elif key_input == 's': # undo: move up
                 top -= 1
+                state = TetrisState.NewBlock
             elif key_input == 'w': # undo: rotate the block counter-clockwise
                 int_key = int(key[0]) - 1
                 if int_key < 0:
                     int_key = 3
                 key = str(int_key) + key[1]
             elif key_input == ' ':
-                top += 1
+                top -= 1
                 toBottom = False
                 state = TetrisState.NewBlock 
 
@@ -130,7 +131,7 @@ if __name__ == "__main__":
               top = 0
               left = board.iScreenDw + board.iScreenDx//2 - 2
               state = board.accept(key, top, left)
-              if(state == TetrisState.Finished):
+              if(state == TetrisState.Hitwall):
                   board.printScreen()
                   print('Game Over!!!')
                   break

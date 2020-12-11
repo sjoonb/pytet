@@ -76,7 +76,7 @@ class Tetris():
                     print("XX", end='')
                     #continue
             print()
-        print('hi')
+        print()
 
     def deleteFullLines(self): # To be implemented!!
         return
