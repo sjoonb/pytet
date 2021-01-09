@@ -31,6 +31,7 @@ def rotate(m_array, rot_num):
 
         return rot_m
 
+# init SetOfBlockArrays including all rotation case
 def initSetOfBlockArrays():
     arrayBlks = [  [ [ 0, 0, 1, 0 ],     # ㅁ
                     [ 0, 0, 1, 0 ],     # ㅁ
@@ -70,33 +71,45 @@ if __name__ == "__main__":
     setOfBlockArrays = initSetOfBlockArrays()
 
     Tetris.init(setOfBlockArrays)
-    board = Tetris(32, 16)
+
+    board = Tetris(10, 8)
 
     idxBlockType = randint(0, 6)
+    block = '0' + str(idxBlockType)
     key = '0' + str(idxBlockType)
-    print(key)
-    board.accept(key)
+    board.new_block(block)
+    board.draw_block()
     board.printScreen()
       
     while (1):
         key = input('Enter a key from [ q (quit), a (left), d (right), s (down), w (rotate), \' \' (drop) ] : ')
         
         if key != 'q':
-          state = board.accept(key)
-          board.printScreen()
-          
-          if(state == TetrisState.NewBlock):
-              idxBlockType = randint(0, 6)
-              key = '0' + str(idxBlockType)
-              state = board.accept(key)
-              if(state == TetrisState.Finished):
-                  board.printScreen()
-                  print('Game Over!!!')
-                  break
-              board.printScreen()
+
+            board.move_current_block_to(key)
+            board.printScreen()
+             
+            if(board.state == TetrisState.NewBlock):
+                idxBlockType = randint(0, 6)
+                block = '0' + str(idxBlockType)
+                board.new_block(block)
+                board.state = TetrisState.Running
+                board.draw_block()
+                if(board.state == TetrisState.NewBlock):
+                    board.state = TetrisState.Finished
+                    board.top += 1
+                    board.draw_block()
+                    print('Game Over!!!')
+                    board.printScreen()
+                    break
+                print()
+                board.printScreen()
+
         else:
-          print('Game aborted...')
-          break
+            print('Game aborted...')
+            break
+
+
     
 
 ### end of pytet.py

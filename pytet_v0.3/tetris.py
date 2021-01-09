@@ -14,6 +14,7 @@ class Tetris():
     nBlockDegrees = 0
     setOfBlockObjects = 0
     iScreenDw = 0   # larget enough to cover the largest block
+    state = 0
 
     @classmethod
     def init(cls, setOfBlockArrays):
@@ -53,11 +54,15 @@ class Tetris():
         self.iScreenDy = iScreenDy
         self.iScreenDx = iScreenDx
         self.idxBlockDegree = 0
+        self.state = TetrisState.Running
         arrayScreen = self.createArrayScreen()
         self.iScreen = Matrix(arrayScreen)
         self.oScreen = Matrix(self.iScreen)
         self.justStarted = True
         return
+
+    def accept(self, key):
+        return self.state
 
     def printScreen(self):
         array = self.oScreen.get_array()
@@ -76,11 +81,81 @@ class Tetris():
             print()
 
     def deleteFullLines(self): # To be implemented!!
-        return
+        j = 0
+        for i in range(self.top + self.currBlk.get_dy() - 1, self.top - 1, -1):
+            if i >= self.iScreenDy or i < 0:
+                continue
+            line = self.get_line(i + j)
+            if line.sum() == self.iScreenDx:
+                newScreen = self.iScreen.clip(0, self.iScreenDw, i + j, self.iScreenDw + self.iScreenDx)
+                newLine = Matrix([[0 for _ in range(self.iScreenDx)]])
+                self.iScreen.paste(newScreen, 1, self.iScreenDw)
+                self.iScreen.paste(newLine, 0, self.iScreenDw)
 
-    def accept(self, key): # To be implemented!!
-        self.state = TetrisState.Running
-        return self.state
+                j += 1
+
+
+    def get_line(self, index):
+        line = self.iScreen.clip(index, self.iScreenDw, index + 1, self.iScreenDw + self.iScreenDx)
+        return line
+
+    def new_block(self, block):
+        self.top = 0
+        self.left = self.iScreenDw + self.iScreenDx//2 - 2
+        self.rotation = int(block[0])
+        self.block_type = int(block[1])
+
+    def draw_block(self):
+        self.block = Tetris.setOfBlockObjects[self.block_type][self.rotation]
+        self.currBlk = Matrix(self.block)
+        self.tempBlk = self.iScreen.clip(self.top, self.left, self.top + self.currBlk.get_dy(), self.left + self.currBlk.get_dx())
+        self.tempBlk = self.tempBlk + self.currBlk
+ 
+        if self.tempBlk.anyGreaterThan(1) and self.state != TetrisState.Finished:
+            self.undo_movement(self.last_movement)
+            return
+
+        self.oScreen = Matrix(self.iScreen)
+        self.oScreen.paste(self.tempBlk, self.top, self.left)
+
+    def move_current_block_to(self, key):
+        self.last_movement = key
+
+        if key == 'a':
+            self.left -= 1
+        elif key == 'd':
+            self.left += 1
+        elif key == 's':
+            self.top += 1
+        elif key == 'w':
+            self.rotation -= 1
+            if self.rotation < 0:
+                self.rotation = 3
+        elif key == ' ':
+            while(self.state == TetrisState.Running):
+                self.top += 1
+                self.draw_block()
+            return
+
+        self.draw_block()
+
+   
+    def undo_movement(self, key):
+        if key == 'a':
+            self.left += 1
+        elif key == 'd':
+            self.left -= 1
+        elif key == 's' or key == ' ':
+            self.top -= 1
+            self.iScreen = Matrix(self.oScreen)
+            self.deleteFullLines()
+            self.state = TetrisState.NewBlock
+        elif key == 'w':
+            self.rotation += 1
+            if self.rotation > 3:
+                self.rotation = 0
+
+
 
 ### end of class Tetris():
     
