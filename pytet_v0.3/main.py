@@ -1,6 +1,7 @@
 from tetris import *
 from random import *
 import threading
+import time
 
 def LED_init():
     thread=threading.Thread(target=LMD.main, args=())
@@ -80,6 +81,7 @@ if __name__ == "__main__":
     board.new_block(block)
     board.draw_block()
     board.printScreen()
+    toBottom = False
       
     while (1):
         key = input('Enter a key from [ q (quit), a (left), d (right), s (down), w (rotate), \' \' (drop) ] : ')

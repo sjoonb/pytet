@@ -7,6 +7,7 @@ class TetrisState(Enum):
     Running = 0
     NewBlock = 1
     Finished = 2
+    Hitwall = 3
 ### end of class TetrisState():
 
 class Tetris():
@@ -30,6 +31,7 @@ class Tetris():
         for i in range(Tetris.nBlockTypes):
             for j in range(Tetris.nBlockDegrees):
                 Tetris.setOfBlockObjects[i][j] = Matrix(setOfBlockArrays[i][j])
+
         return
 		
     def createArrayScreen(self):
@@ -79,6 +81,35 @@ class Tetris():
                     print("XX", end='')
                     #continue
             print()
+        print()
+
+    def deleteFullLines(self, top): # To be implemented!!
+        deleted = 0
+        blkY = self.currBlk.get_dy() # 블럭 크기
+ 
+        for y in range(blkY-1,-1,-1):
+            currY = top + y + deleted
+            line = self.oScreen.clip(currY, 0, currY + 1, self.oScreen.get_dx())
+
+            if (currY < self.iScreenDy and line.sum() == self.oScreen.get_dx()):
+                temp = self.oScreen.clip(0, 0, currY, self.oScreen.get_dx())
+                lineArr = [[0 for i in range(self.iScreenDx)]]
+                newLine = Matrix(lineArr)
+
+                self.oScreen.paste(temp, 1, 0) 
+                self.oScreen.paste(newLine, 0, self.iScreenDw)
+                deleted += 1
+                
+
+
+        print("line.sum() = {}\noScreen.dx = {}".format(line.sum(), self.oScreen.get_dx())) 
+        print("dw = {}".format(self.iScreenDw))
+
+        if line.sum() == self.oScreen.get_dx():
+            print("full!")
+
+        #self.oScreen.paste(line, 0, 0)
+        
 
     def deleteFullLines(self): # To be implemented!!
         j = 0
