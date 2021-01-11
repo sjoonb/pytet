@@ -75,10 +75,8 @@ if __name__ == "__main__":
     board = Tetris(10, 8)
 
     idxBlockType = randint(0, 6)
-    block = '0' + str(idxBlockType)
     key = '0' + str(idxBlockType)
-    board.new_block(block)
-    board.draw_block()
+    board.accept(key)
     board.printScreen()
       
     while (1):
@@ -86,19 +84,14 @@ if __name__ == "__main__":
         
         if key != 'q':
 
-            board.move_current_block_to(key)
+            state = board.accept(key)
             board.printScreen()
              
-            if(board.state == TetrisState.NewBlock):
+            if(state == TetrisState.NewBlock):
                 idxBlockType = randint(0, 6)
-                block = '0' + str(idxBlockType)
-                board.new_block(block)
-                board.state = TetrisState.Running
-                board.draw_block()
-                if(board.state == TetrisState.NewBlock):
-                    board.state = TetrisState.Finished
-                    board.top += 1
-                    board.draw_block()
+                key = '0' + str(idxBlockType)
+                state = board.accept(key)
+                if(state == TetrisState.Finished):
                     print('Game Over!!!')
                     board.printScreen()
                     break
