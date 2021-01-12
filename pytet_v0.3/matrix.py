@@ -126,6 +126,3 @@ class Matrix:
             if len(temp) > 0:
                 return True
         return False
-
-
-
