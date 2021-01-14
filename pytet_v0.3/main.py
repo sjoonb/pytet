@@ -1,4 +1,4 @@
-from tetris import *
+from colortetris import *
 from random import *
 import threading
 
@@ -70,9 +70,9 @@ if __name__ == "__main__":
     #LED_init()
     setOfBlockArrays = initSetOfBlockArrays()
 
-    ColorTetris.init(setOfBlockArrays)
+    Tetris.init(setOfBlockArrays)
 
-    board = ColorTetris(10, 8)
+    board = Tetris(10, 8)
 
     idxBlockType = randint(0, 6)
     key = '0' + str(idxBlockType)
