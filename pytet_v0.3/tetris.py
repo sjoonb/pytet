@@ -9,6 +9,18 @@ class TetrisState(Enum):
     Finished = 2
 ### end of class TetrisState():
 
+class Block():
+    def __del__(self):
+        pass
+
+    def __aloc(self):
+        pass
+
+    def __init__(self):
+        pass
+
+
+
 class Tetris():
     nBlockTypes = 0
     nBlockDegrees = 0
@@ -62,11 +74,17 @@ class Tetris():
         return
 
     def accept(self, key):
-        if self.state == TetrisState.NewBlock:
-            self.init_block_state(key)
+#        if self.state == TetrisState.NewBlock:
+#            block = self.init_block_by(key)
+            # self.init_block_state(key)
 
-        self.change_block_state(key)
-        self.tempBlk = self.generate_block()
+        block = self.get_block_by(key)
+        tempBlk = self.generate_temp(block)
+
+        #self.change_block_state(key)
+        #self.tempBlk = self.generate_block()
+
+
              
         if self.tempBlk.anyGreaterThan(1):
             if self.state == TetrisState.NewBlock:
@@ -85,15 +103,35 @@ class Tetris():
                 return self.state
 
         self.paste_temp_block_to_screen()
- 
+
         self.state = TetrisState.Running
+
         return self.state
+
+    def get_block_by(self, key):
+        if self.state == TetrisState.NewBlock:
+            block = init_block_by(key)
+            return block
+
+        else:
+            block = self.change_block_by(key)
+            return block
+
+    def init_block_by(self, key):
+        self.top = 0
+        self.left = self.iScreenDw + self.iScreenDx//2 - 2
+        self.rotation = int(key[0])
+        self.block_type = 0 # int(key[1])
+        
+        return self.block
 
     def init_block_state(self, key):
         self.top = 0
         self.left = self.iScreenDw + self.iScreenDx//2 - 2
         self.rotation = int(key[0])
         self.block_type = 0 # int(key[1])
+
+        return 
 
     def generate_block(self):
         block = Tetris.setOfBlockObjects[self.block_type][self.rotation]
