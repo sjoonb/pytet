@@ -1,7 +1,7 @@
 class MatrixError(Exception):
     pass
 
-class Matrix:
+class Matrix():
     nAlloc = 0
     nFree = 0
 
@@ -126,3 +126,26 @@ class Matrix:
             if len(temp) > 0:
                 return True
         return False
+
+
+# for colortetris module
+
+class Matrix(Matrix):
+    def count(self):
+        print("in matrix.py")
+        total = 0
+        for y in range(self._dy):
+            for x in range(self._dx):
+                if self._array[y][x] > 0:
+                    total += 1
+        return total
+
+    def blockGreaterThan(self, block):
+        for y in range(self._dy):
+            for x in range(self._dx):
+                if block._array[y][x] != 0 and self._array[y][x] > block._array[y][x] :
+                    return True
+
+        return False
+
+

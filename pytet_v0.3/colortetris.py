@@ -1,3 +1,4 @@
+from matrix import *
 from tetris import *
 
 class Colors:
@@ -17,7 +18,7 @@ class Tetris(Tetris):
         self.change_block_state(key)
         self.generate_block()
              
-        if self.is_block_crash():
+        if self.tempBlk.blockGreaterThan(self.currBlk):
             if self.state == TetrisState.NewBlock:
                 self.paste_temp_block_to_screen()
                 self.state = TetrisState.Finished
@@ -38,14 +39,6 @@ class Tetris(Tetris):
         self.state = TetrisState.Running
         return self.state
 
-    def is_block_crash(self):
-        block = self.block.get_array()
-        tempBlk = self.tempBlk.get_array()
-        for y in range(self.block._dy):
-            for x in range(self.block._dx):
-                if block[y][x] == 1 and tempBlk[y][x] > self.color:
-                    return True 
-        return False
 
     def init_block_state(self, key):
         super().init_block_state(key)
@@ -72,7 +65,7 @@ class Tetris(Tetris):
         elif key == ' ':
             self.top += 1
             self.generate_block()
-            while not self.is_block_crash():
+            while not self.tempBlk.blockGreaterThan(self.currBlk):
                 self.paste_temp_block_to_screen()
                 self.top += 1
                 self.generate_block()
@@ -117,7 +110,7 @@ class Tetris(Tetris):
             if i >= self.iScreenDy or i < 0:
                 continue
             line = self.get_line(i + j)
-            if self.count_blocks_in(line) == self.iScreenDx:
+            if line.count() == self.iScreenDx:
                 newScreen = self.iScreen.clip(0, self.iScreenDw, i + j, self.iScreenDw + self.iScreenDx)
                 newLine = Matrix([[0 for _ in range(self.iScreenDx)]])
                 self.iScreen.paste(newScreen, 1, self.iScreenDw)
@@ -125,14 +118,5 @@ class Tetris(Tetris):
 
                 j += 1
                 
-    def count_blocks_in(self, line):
-        line = line.get_array()
-        count = 0
-        for i in line:
-            for j in i:
-                if j > 1:
-                    count += 1
-        return count
-
 ### end of class ColorTetris():
     
