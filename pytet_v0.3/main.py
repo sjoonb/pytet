@@ -74,6 +74,7 @@ if __name__ == "__main__":
 
     board = Tetris(10, 8)
 
+
     idxBlockType = randint(0, 6)
     key = '0' + str(idxBlockType)
     board.accept(key)
