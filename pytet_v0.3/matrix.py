@@ -129,3 +129,13 @@ class Matrix:
 
 
 
+class Block(Matrix):
+    def __init__(self, block, top, left, block_type, rotation):
+        self.top = top
+        self.left = left
+        self.block_type = block_type
+        self.rotation = rotation
+
+        super().__init__(block)
+
+

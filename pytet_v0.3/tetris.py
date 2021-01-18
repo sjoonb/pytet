@@ -9,27 +9,27 @@ class TetrisState(Enum):
     Finished = 2
 ### end of class TetrisState():
 
-class Block(Matrix):
-    def generate_block(self):
-        block = Tetris.setOfBlockObjects[self.block_type][self.rotation]
-        super().__init__(block)
-        
-
-    def __init__(self, top, left, rotation, block_type):
-        self.top = top
-        self.left = left
-        self.rotation = rotation
-        self.block_type = block_type
-        
-        self.generate_block()
-
-        return
-
-    def rotate(self):
-        self.generate_block()
-        return
-
-### end of class Block():
+#class Block(Matrix):
+#    def generate_block(self):
+#        block = Tetris.setOfBlockObjects[self.block_type][self.rotation]
+#        super().__init__(block)
+#        
+#
+#    def __init__(self, top, left, rotation, block_type):
+#        self.top = top
+#        self.left = left
+#        self.rotation = rotation
+#        self.block_type = block_type
+#        
+#        self.generate_block()
+#
+#        return
+#
+#    def rotate(self):
+#        self.generate_block()
+#        return
+#
+#### end of class Block():
 
 class Tetris():
     nBlockTypes = 0
@@ -85,6 +85,7 @@ class Tetris():
 
     def accept(self, key):
         self.key = key
+
         if self.state == TetrisState.NewBlock:
             currBlk = self.init_block()
 
@@ -95,41 +96,43 @@ class Tetris():
  
         if tempBlk.anyGreaterThan(1):
             if self.state == TetrisState.NewBlock:
-                #self.paste_block_to_screen(tempBlk, self.oScreen)
                 self.oScreen = Matrix(self.iScreen)
-                self.oScreen.paste(tempBlk, currBlk.top, currBlk.left) 
+                self.paste_block_to_screen(tempBlk, self.oScreen)
+
                 self.state = TetrisState.Finished
+
 
             else:
                 currBlk = self.undo(currBlk)
 
                 if key == ' ' or key == 's':   
                     tempBlk = self.clip_and_paste(self.iScreen, currBlk)
-                    self.iScreen.paste(tempBlk, currBlk.top, currBlk.left)
-                    self.deleteFullLines(tempBlk, currBlk.top)
+                    self.paste_block_to_screen(tempBlk, self.iScreen)
+                    self.deleteFullLines(tempBlk)
 
                     self.state = TetrisState.NewBlock
 
             return self.state
 
-        #self.paste_block_to_screen(tempBlk, self.oScreen)
         self.oScreen = Matrix(self.iScreen)
-        self.oScreen.paste(tempBlk, currBlk.top, currBlk.left)
+        self.paste_block_to_screen(tempBlk, self.oScreen)
 
         self.pastBlk = currBlk
         self.state = TetrisState.Running
 
         return self.state
-
+    
     def init_block(self):
         top = 0
         left = self.iScreenDw + self.iScreenDx//2 - 2
         rotation = int(self.key[0])
         block_type = int(self.key[1])
 
-        block = Block(top, left, rotation, block_type)
+        block = Tetris.setOfBlockObjects[block_type][rotation]
+        block = Block(block, top, left, block_type, rotation)
 
         return block
+
 
     def update(self, block):
         if self.key == 'a':
@@ -146,7 +149,7 @@ class Tetris():
             if block.rotation < 0:
                 block.rotation = 3
 
-            block.rotate()
+            block = self.rotate(block)
 
         elif self.key == ' ':
             block.top += 1
@@ -158,9 +161,15 @@ class Tetris():
        
         return block
 
+    def rotate(self, block):
+        rotatedBlk = Tetris.setOfBlockObjects[block.block_type][block.rotation]
+        return Block(rotatedBlk, block.top, block.left, block.block_type, block.rotation)
+
+
     def clip_and_paste(self, screen, block): 
         tempBlk = screen.clip(block.top, block.left, block.top + block.get_dy(), block.left + block.get_dx())
         tempBlk = tempBlk + block
+        tempBlk = Block(tempBlk, block.top, block.left, block.block_type, block.rotation)
 
         return tempBlk
 
@@ -178,10 +187,13 @@ class Tetris():
             block.rotation += 1
             if block.rotation > 3:
                 block.rotation = 0
-            block.rotate()
+
+            block = self.rotate(block)
           
         return block
 
+    def paste_block_to_screen(self, block, screen):
+        screen.paste(block, block.top, block.left)
 
     def printScreen(self):
         array = self.oScreen.get_array()
@@ -199,9 +211,9 @@ class Tetris():
                     #continue
             print()
 
-    def deleteFullLines(self, block, top): # To be implemented!!
+    def deleteFullLines(self, block): # To be implemented!!
         j = 0
-        for i in range(top + block.get_dy() - 1, top - 1, -1):
+        for i in range(block.top + block.get_dy() - 1, block.top - 1, -1):
             if i >= self.iScreenDy or i < 0:
                 continue
             line = self.get_line(i + j)
