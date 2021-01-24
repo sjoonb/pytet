@@ -1,4 +1,4 @@
-from colortetris import *
+from tetris import *
 from random import *
 import threading
 
