@@ -131,21 +131,9 @@ class Matrix():
 # for colortetris module
 
 class Matrix(Matrix):
-    def count(self):
-        print("in matrix.py")
-        total = 0
+    def binarize(self):
         for y in range(self._dy):
             for x in range(self._dx):
-                if self._array[y][x] > 0:
-                    total += 1
-        return total
-
-    def blockGreaterThan(self, block):
-        for y in range(self._dy):
-            for x in range(self._dx):
-                if block._array[y][x] != 0 and self._array[y][x] > block._array[y][x] :
-                    return True
-
-        return False
-
-
+                if self._array[y][x] > 1:
+                    self._array[y][x] = 1
+        
