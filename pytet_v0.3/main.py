@@ -1,4 +1,4 @@
-from tetris_java import *
+from tetris import *
 
 def rotate(m_array, rot_num):
         N = len(m_array)
@@ -64,6 +64,7 @@ class OnLeft():
 
         updateNeeded = True 
         return t.anyConflict(updateNeeded)
+
 
 class OnRight():
     def run(self, t, key):
@@ -211,3 +212,6 @@ if __name__ == "__main__":
         else:
             print('Game aborted...')
             break
+
+
+
