@@ -98,20 +98,20 @@ class Tetris():
 
         if key not in Tetris.setOfOperator.keys():
             print("wrong key!")
+
             return Tetris.state
 
         else: 
             keyState, do, doState, undo, undoState = Tetris.setOfOperator[key]
-            Tetris.state = keyState
 
-        anyConflict = do.run(self, key)
-        Tetris.state = doState
+            anyConflict = do.run(self, key)
+            Tetris.state = doState
 
-        if anyConflict:
-            undo.run(self, key)
-            Tetris.state = undoState
+            if anyConflict:
+                undo.run(self, key)
+                Tetris.state = undoState
 
-        return Tetris.state 
+            return Tetris.state 
 
 
     def anyConflict(self, updateNeeded):

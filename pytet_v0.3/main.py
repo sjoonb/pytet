@@ -100,7 +100,6 @@ class OnCw():
     def run(self, t, key):
         t.idxBlockDegree = (t.idxBlockDegree + 1)  % t.nBlockDegrees
         t.currBlk = t.setOfBlockObjects[t.idxBlockType][t.idxBlockDegree]
-        print(t.idxBlockDegree)
 
         updateNeeded = True
         return t.anyConflict(updateNeeded)
