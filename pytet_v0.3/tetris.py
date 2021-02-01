@@ -7,9 +7,6 @@ class TetrisState(Enum):
     NewBlock = 1
     Finished = 2
 
-class TetrisOperation():
-    pass
-
 class Tetris():
     nBlockTypes = 0
     nBlockDegrees = 0
@@ -96,22 +93,21 @@ class Tetris():
         if Tetris.state == TetrisState.NewBlock:
             key = key[1]
 
-        if key not in Tetris.setOfOperator.keys():
-            print("wrong key!")
+        if key in Tetris.setOfOperator.keys():
+            currState, do, doState, undo, undoState = Tetris.setOfOperator[key]
 
-            return Tetris.state
+            if not currState == Tetris.state:
+                return Tetris.state
 
-        else: 
-            keyState, do, doState, undo, undoState = Tetris.setOfOperator[key]
+            else:
+                anyConflict = do.run(self, key)
+                Tetris.state = doState
 
-            anyConflict = do.run(self, key)
-            Tetris.state = doState
+                if anyConflict:
+                    undo.run(self, key)
+                    Tetris.state = undoState
 
-            if anyConflict:
-                undo.run(self, key)
-                Tetris.state = undoState
-
-            return Tetris.state 
+                return Tetris.state 
 
 
     def anyConflict(self, updateNeeded):

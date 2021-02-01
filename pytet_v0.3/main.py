@@ -175,7 +175,6 @@ Tetris.setOperation("4", TetrisState.NewBlock, myOnNewBlock, TetrisState.Running
 Tetris.setOperation("5", TetrisState.NewBlock, myOnNewBlock, TetrisState.Running, myOnFinished, TetrisState.Finished)
 Tetris.setOperation("6", TetrisState.NewBlock, myOnNewBlock, TetrisState.Running, myOnFinished, TetrisState.Finished)
 
-
 if __name__ == "__main__":
 
     setOfBlockArrays = initSetOfBlockArrays()
