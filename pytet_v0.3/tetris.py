@@ -32,8 +32,8 @@ class Tetris():
         return
 
     @classmethod
-    def setOperation(cls, key, keyState, do, doState, undo, undoState):
-        Tetris.setOfOperator[key] = [keyState, do, doState, undo, undoState]
+    def setOperation(cls, key, currState, do, doState, undo, undoState):
+        Tetris.setOfOperator[key] = [currState, do, doState, undo, undoState]
 
         return
 
@@ -117,9 +117,10 @@ class Tetris():
         if tempBlk.anyGreaterThan(1):
             return True
 
-        if updateNeeded:
-            self.oScreen = Matrix(self.iScreen)
-            self.oScreen.paste(tempBlk, self.top, self.left)
+        else: 
+            if updateNeeded:
+                self.oScreen = Matrix(self.iScreen)
+                self.oScreen.paste(tempBlk, self.top, self.left)
 
-        return False
+            return False
 

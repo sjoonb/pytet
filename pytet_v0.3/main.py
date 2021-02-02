@@ -93,7 +93,7 @@ class OnDrop():
         while True:
             t.top += 1
             if t.anyConflict(updateNeeded):
-                updateNeeded = False
+                updateNeeded = True
                 return t.anyConflict(updateNeeded)
 
 class OnCw():
