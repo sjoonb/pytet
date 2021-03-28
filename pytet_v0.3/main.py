@@ -71,9 +71,9 @@ if __name__ == "__main__":
     #LED_init()
     setOfBlockArrays = initSetOfBlockArrays()
 
-    Tetris.init(setOfBlockArrays)
+    ColorTetris.init(setOfBlockArrays)
 
-    board = Tetris(10, 8)
+    board = ColorTetris(10, 8)
 
 
     idxBlockType = randint(0, 6)
@@ -89,7 +89,7 @@ if __name__ == "__main__":
 
             state = board.accept(key)
             board.printScreen()
-             
+
             if(state == TetrisState.NewBlock):
                 idxBlockType = randint(0, 6)
                 key = '0' + str(idxBlockType)

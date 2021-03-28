@@ -1,7 +1,7 @@
 class MatrixError(Exception):
     pass
 
-class Matrix:
+class Matrix():
     nAlloc = 0
     nFree = 0
 
@@ -130,14 +130,12 @@ class Matrix:
         return False
 
 
+# for colortetris module
 
-class Block(Matrix):
-    def __init__(self, block, top, left, block_type, rotation):
-        self.top = top
-        self.left = left
-        self.block_type = block_type
-        self.rotation = rotation
-
-        super().__init__(block)
-
-
+class Matrix(Matrix):
+    def binarize(self):
+        for y in range(self._dy):
+            for x in range(self._dx):
+                if self._array[y][x] > 1:
+                    self._array[y][x] = 1
+        
